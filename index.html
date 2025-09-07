@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cipher Suite - Encryption & Decryption Tool</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <!-- Authentication Container -->
+    <div id="auth-container" class="auth-container">
+        <div class="auth-wrapper">
+            <div class="auth-header">
+                <h1>Cipher Suite</h1>
+                <p>Secure Encryption & Decryption Tool</p>
+            </div>
+
+            <!-- Login Form -->
+            <div id="login-form" class="auth-form">
+                <h2>Login</h2>
+                <form id="loginForm">
+                    <div class="form-group">
+                        <label class="form-label" for="loginUsername">Username</label>
+                        <input type="text" id="loginUsername" class="form-control" required>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label" for="loginPassword">Password</label>
+                        <input type="password" id="loginPassword" class="form-control" required>
+                    </div>
+                    <div id="login-error" class="error-message hidden"></div>
+                    <div id="login-attempts" class="attempts-counter hidden"></div>
+                    <button type="submit" class="btn btn--primary btn--full-width">Login</button>
+                </form>
+                <p class="auth-toggle">
+                    Don't have an account? 
+                    <button type="button" id="showRegister" class="link-button">Register here</button>
+                </p>
+            </div>
+
+            <!-- Registration Form -->
+            <div id="register-form" class="auth-form hidden">
+                <h2>Register</h2>
+                <form id="registerForm">
+                    <div class="form-group">
+                        <label class="form-label" for="registerUsername">Username</label>
+                        <input type="text" id="registerUsername" class="form-control" required>
+                        <div class="validation-message" id="username-validation"></div>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label" for="registerPassword">Password</label>
+                        <input type="password" id="registerPassword" class="form-control" required>
+                        <div class="password-requirements">
+                            <div class="requirement" id="length-req">✗ At least 8 characters</div>
+                            <div class="requirement" id="uppercase-req">✗ One uppercase letter</div>
+                            <div class="requirement" id="lowercase-req">✗ One lowercase letter</div>
+                            <div class="requirement" id="number-req">✗ One number</div>
+                            <div class="requirement" id="special-req">✗ One special character</div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label" for="confirmPassword">Confirm Password</label>
+                        <input type="password" id="confirmPassword" class="form-control" required>
+                        <div class="validation-message" id="confirm-validation"></div>
+                    </div>
+                    <div id="register-error" class="error-message hidden"></div>
+                    <button type="submit" class="btn btn--primary btn--full-width">Register</button>
+                </form>
+                <p class="auth-toggle">
+                    Already have an account? 
+                    <button type="button" id="showLogin" class="link-button">Login here</button>
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Application Container -->
+    <div id="app-container" class="app-container hidden">
+        <header class="app-header">
+            <div class="container">
+                <div class="header-content">
+                    <h1>Cipher Suite</h1>
+                    <div class="user-info">
+                        <span id="currentUser">Welcome, User</span>
+                        <button type="button" id="logoutBtn" class="btn btn--outline btn--sm">Logout</button>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <main class="main-content">
+            <div class="container">
+                <!-- Cipher Selection -->
+                <div class="cipher-selection">
+                    <h2>Select Cipher Algorithm</h2>
+                    <div class="cipher-grid">
+                        <div class="cipher-card" data-cipher="atbash">
+                            <h3>Atbash Cipher</h3>
+                            <p>Simple substitution cipher that reverses the alphabet</p>
+                            <div class="cipher-example">A↔Z, B↔Y, C↔X, etc.</div>
+                        </div>
+                        <div class="cipher-card" data-cipher="caesar">
+                            <h3>Caesar Cipher</h3>
+                            <p>Shift cipher that moves each letter by a fixed number of positions</p>
+                            <div class="cipher-example">HELLO → KHOOR (shift 3)</div>
+                        </div>
+                        <div class="cipher-card" data-cipher="vigenere">
+                            <h3>Vigenere Cipher</h3>
+                            <p>Polyalphabetic substitution using a repeating keyword</p>
+                            <div class="cipher-example">HELLO + KEY → RIJVS</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Cipher Operation Interface -->
+                <div id="cipher-interface" class="cipher-interface hidden">
+                    <div class="interface-header">
+                        <h2 id="selectedCipherTitle">Atbash Cipher</h2>
+                        <button type="button" id="backToSelection" class="btn btn--outline btn--sm">← Back to Selection</button>
+                    </div>
+
+                    <div class="cipher-controls">
+                        <div class="input-section">
+                            <div class="form-group">
+                                <label class="form-label" for="inputText">Input Text</label>
+                                <textarea id="inputText" class="form-control" rows="6" 
+                                    placeholder="Enter text to encrypt or decrypt..."></textarea>
+                            </div>
+
+                            <!-- Caesar Cipher Specific Controls -->
+                            <div id="caesar-controls" class="cipher-params hidden">
+                                <div class="form-group">
+                                    <label class="form-label" for="shiftValue">Shift Value (1-25)</label>
+                                    <input type="number" id="shiftValue" class="form-control" min="1" max="25" value="3">
+                                </div>
+                            </div>
+
+                            <!-- Vigenere Cipher Specific Controls -->
+                            <div id="vigenere-controls" class="cipher-params hidden">
+                                <div class="form-group">
+                                    <label class="form-label" for="keyword">Keyword</label>
+                                    <input type="text" id="keyword" class="form-control" 
+                                        placeholder="Enter keyword (letters only)">
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="action-buttons">
+                            <button type="button" id="encryptBtn" class="btn btn--primary">Encrypt</button>
+                            <button type="button" id="decryptBtn" class="btn btn--secondary">Decrypt</button>
+                            <button type="button" id="clearBtn" class="btn btn--outline">Clear All</button>
+                        </div>
+
+                        <div class="output-section">
+                            <div class="form-group">
+                                <label class="form-label" for="outputText">Output Text</label>
+                                <textarea id="outputText" class="form-control" rows="6" readonly></textarea>
+                            </div>
+                            <button type="button" id="copyBtn" class="btn btn--outline btn--sm">Copy to Clipboard</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Success Message Modal -->
+    <div id="successModal" class="modal hidden">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Success</h3>
+                <button type="button" class="modal-close" id="closeSuccessModal">&times;</button>
+            </div>
+            <div class="modal-body">
+                <p id="successMessage">Operation completed successfully!</p>
+            </div>
+        </div>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html>
